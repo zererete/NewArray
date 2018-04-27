@@ -7,7 +7,8 @@ class CArray
 private:
 	_T *Elem;
 	unsigned int _size;
-	unsigned int _capasity;
+	unsigned int _capacity;
+	void expand();
 public: // Interface
 
 		// Конструктор по умолчанию
@@ -40,10 +41,10 @@ public: // Interface
 	//);
 
 	// Добавить элемент в массив по заданному индексу
-	//void insert(
-	//	unsigned int  _index,
-	//	const _T & _value
-	//);
+	void insert(
+		unsigned int  _index,
+		const _T & _value
+	);
 
 	// Удалить элемент массива по заданному индексу
 	//void erase(
@@ -66,17 +67,33 @@ protected: // Attributes
 };
 
 template<class _T>
+void CArray<_T>::expand()
+{
+	_capacity = 1  +  _capacity  *  CAP_INDEX;
+	_T * temp;
+	temp = new _T[_capacity];
+	for (size_t i = 0; i < _size; ++i)
+	{
+		temp[i] = Elem[i];
+	}
+	delete[] Elem;
+	Elem = temp;
+}
+
+template<class _T>
 inline CArray<_T>::CArray()
 {
+	_size = 0;
+	_capacity = 0;
 	Elem = nullptr;
 }
 
 template<class _T>
 inline CArray<_T>::CArray(unsigned int _size)
 {
-	Elem = new _T[_size];
 	this->_size = _size;
-	_capasity = _size*CAP_INDEX;
+	_capacity = 1 + _size*CAP_INDEX;
+	Elem = new _T[_capacity];
 }
 
 template<class _T>
@@ -85,16 +102,12 @@ void CArray<_T>::operator=(const CArray<_T> & object)
 	if (Elem)
 		delete[] Elem;
 	_size = object._size;
-	_capasity = object._capasity;
-	Elem = new _T[_size];
+	_capacity = object._capacity;
+	Elem = new _T[_capacity];
 	for (size_t i = 0;i < _size; ++i)
 	{
 		*(Elem+i) =  *(object.Elem+i);
 	}
-	//for (size_t i = 0; *(object.Elem + i) != '\0'; ++i)
-	//{
-	//	*(Elem + i) = *object.Elem + i;
-	//}
 }
 
 template<class _T>
@@ -118,6 +131,43 @@ _T* CArray<_T>::getData()
 }
 
 template<class _T>
+void CArray<_T>::insert(
+	unsigned int _index, 
+	const _T & _value)
+{
+	if (_index >= _size)
+		//TODO: THROW
+		throw "ERROR: NOT ENOUGHT SPACE";
+	if (!Elem)
+	{
+		_capacity = 2;
+		Elem = new _T[_capacity];
+		_size = 1;
+		Elem[0] = _value;
+		return;
+	}
+	if (_size < _capacity)
+		//TODO: INSERT
+	{
+		_T *_end = Elem + _capacity - 1;
+		_T * _indx = Elem + _index;
+		while (_end != _indx)
+		{
+			*_end = *(_end - 1);
+			--_end;
+		}
+		++_size;
+		*_indx = _value;
+	}
+	else
+		//TODO: EXPAND & INSERT
+	{
+		expand();
+		insert(_index, _value);
+	}
+}
+
+template<class _T>
 inline void CArray<_T>::clear()
 {
 	if (Elem)
@@ -125,7 +175,7 @@ inline void CArray<_T>::clear()
 		delete[] Elem;
 		Elem = nullptr;
 		_size = 0;
-		_capasity = 0;
+		_capacity = 0;
 	}
 		
 }
