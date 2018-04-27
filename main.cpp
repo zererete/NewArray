@@ -6,21 +6,46 @@ int main()
 {
 	CArray<string> arr;
 
-	arr.push_back("asd");
-	arr.push_front("qwe");
+	arr.push_back("first");
+	arr.push_front("second");
+	arr.push_front("third");
+	arr.push_front("fourth");
+	arr.push_front("fifth");
 	
 	for (int i = 0; i < arr.size(); ++i)
 		cout << "arr " << arr[i].data() << endl;
-	cout << arr.empty() << endl;
-
-
-	arr.clear();
-	arr.push_back("1");
-	arr.push_front("2");
-
+	
+	arr.erase(0);
+	arr.erase(0);
+	arr.erase(0);
+	cout << endl;
 	for (int i = 0; i < arr.size(); ++i)
 		cout << "arr " << arr[i].data() << endl;
-	cout << arr.empty() << endl;
+	
+	arr.push_back("b1");
+	arr.push_back("b2");
+	arr.push_back("b3");
+	arr.push_back("b1");
+	arr.push_back("b2");
+	arr.push_back("b3");
+	arr.push_back("b1");
+	arr.push_back("b2");
+	arr.push_back("b3");
+	arr.push_front("front");
+	arr.clear();
+	cout << endl;
+	arr.push_back("b1");
+	arr.push_back("b2");
+	arr.push_back("b3");
+	arr.push_back("b1");
+	arr.push_back("b2");
+	arr.push_back("b3");
+	arr.push_back("b1");
+	arr.push_back("b2");
+	arr.push_back("b3");
+	for (int i = 0; i < arr.size(); ++i)
+		cout << "arr " << arr[i].data() << endl;
+	
 	//CArray<string> arr(5);
 	//arr.fill(5, "world");
 

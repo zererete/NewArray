@@ -59,9 +59,9 @@ public: // Interface
 	bool empty();
 
 	// Удалить элемент массива по заданному индексу
-	//void erase(
-	//	unsigned int _index
-	//);
+	void erase(
+		unsigned int _index
+	);
 
 	// Очистить массив
 	void clear();
@@ -159,7 +159,7 @@ inline void CArray<_T>::push_back(const _T & _value)
 	if(!_size)
 		insert(0, _value);
 	else
-		insert(_size - 1, _value);
+		insert(_size, _value);
 }
 
 template<class _T>
@@ -252,6 +252,27 @@ template<class _T>
 inline bool CArray<_T>::empty()
 {
 	return !_size;
+}
+
+template<class _T>
+void CArray<_T>::erase(unsigned int _index)
+{
+	if (_index >= _size)
+		throw "ERROR erase our of range";
+	_T * temp;
+	temp = new _T[--_capacity];
+	for (size_t i = 0, j = 0; i < _size; ++i)
+	{
+		if (i != _index)
+		{
+			temp[j] = Elem[i];
+			++j;
+		}
+	}
+	delete[] Elem;
+	Elem = temp;
+	--_size;
+	;
 }
 
 template<class _T>
