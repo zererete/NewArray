@@ -4,12 +4,23 @@ using namespace std;
 
 int main()
 {
-	CArray<string> arr(1);
-	arr.insert(0, "insert");
+	CArray<string> arr;
+
+	arr.push_back("asd");
+	arr.push_front("qwe");
+	
+	for (int i = 0; i < arr.size(); ++i)
+		cout << "arr " << arr[i].data() << endl;
+	cout << arr.empty() << endl;
+
+
+	arr.clear();
+	arr.push_back("1");
+	arr.push_front("2");
 
 	for (int i = 0; i < arr.size(); ++i)
 		cout << "arr " << arr[i].data() << endl;
-	cout << endl;
+	cout << arr.empty() << endl;
 	//CArray<string> arr(5);
 	//arr.fill(5, "world");
 
