@@ -5,7 +5,7 @@ template <class _T>
 class CArray
 {
 private:
-	_T *Elem;
+	_T * Elem;
 	unsigned int _size;
 	unsigned int _capacity;
 	void expand();
@@ -25,7 +25,7 @@ public: // Interface
 
 	void operator= (
 		const CArray<_T> & object
-	);
+		);
 
 	// Деструктор
 	~CArray();
@@ -36,15 +36,27 @@ public: // Interface
 	_T* getData();
 
 	// Добавить элемент в конец массива
-	//void push_back(
-	//	const _T & _value
-	//);
+	void push_back(
+		const _T & _value
+	);
+
+	// Добавить элемент в начало массива
+	void push_front(
+		const _T & _value
+	);
 
 	// Добавить элемент в массив по заданному индексу
 	void insert(
 		unsigned int  _index,
 		const _T & _value
 	);
+
+	void resize(
+		unsigned int _n
+	);
+
+	// 
+	bool empty();
 
 	// Удалить элемент массива по заданному индексу
 	//void erase(
@@ -69,7 +81,7 @@ protected: // Attributes
 template<class _T>
 void CArray<_T>::expand()
 {
-	_capacity = 1  +  _capacity  *  CAP_INDEX;
+	_capacity = 1 + _capacity * CAP_INDEX;
 	_T * temp;
 	temp = new _T[_capacity];
 	for (size_t i = 0; i < _size; ++i)
@@ -91,9 +103,18 @@ inline CArray<_T>::CArray()
 template<class _T>
 inline CArray<_T>::CArray(unsigned int _size)
 {
-	this->_size = _size;
-	_capacity = 1 + _size*CAP_INDEX;
-	Elem = new _T[_capacity];
+	if (!_size)
+	{
+		this->_size = _size;
+		_capacity = 0;
+		Elem = nullptr;
+	}
+	else
+	{
+		this->_size = _size;
+		_capacity = 1 + _size * CAP_INDEX;
+		Elem = new _T[_capacity];
+	}
 }
 
 template<class _T>
@@ -104,9 +125,9 @@ void CArray<_T>::operator=(const CArray<_T> & object)
 	_size = object._size;
 	_capacity = object._capacity;
 	Elem = new _T[_capacity];
-	for (size_t i = 0;i < _size; ++i)
+	for (size_t i = 0; i < _size; ++i)
 	{
-		*(Elem+i) =  *(object.Elem+i);
+		*(Elem + i) = *(object.Elem + i);
 	}
 }
 
@@ -131,13 +152,30 @@ _T* CArray<_T>::getData()
 }
 
 template<class _T>
+inline void CArray<_T>::push_back(const _T & _value)
+{
+	if (_size == _capacity)
+		expand();
+	if(!_size)
+		insert(0, _value);
+	else
+		insert(_size - 1, _value);
+}
+
+template<class _T>
+void CArray<_T>::push_front(const _T & _value)
+{
+	insert(0, _value);
+}
+
+template<class _T>
 void CArray<_T>::insert(
-	unsigned int _index, 
+	unsigned int _index,
 	const _T & _value)
 {
-	if (_index >= _size)
-		//TODO: THROW
-		throw "ERROR: NOT ENOUGHT SPACE";
+	//if (_index >= _size)
+	//	//TODO: THROW
+	//	throw "ERROR: NOT ENOUGHT SPACE";
 	if (!Elem)
 	{
 		_capacity = 2;
@@ -168,6 +206,55 @@ void CArray<_T>::insert(
 }
 
 template<class _T>
+void CArray<_T>::resize(unsigned int _n)
+{
+	if(_n > _size)
+		if (empty())
+		{
+			_capacity = 1 + _n * CAP_INDEX;
+			Elem = new _T[_capacity];
+			_size = _n;
+		}
+		else
+		{
+			if (_n < _capacity)
+				_size = _n;
+			else
+			{
+				_T * temp;
+				_capacity = 1 + _n * CAP_INDEX;
+				temp = new _T[_capacity];
+				for (size_t i = 0; i < _size; i++)
+				{
+					temp[i] = Elem[i];
+				}
+				delete[] Elem;
+				Elem = temp;
+				_size = _n;
+			}
+		}
+	else
+	{
+		_T * temp;
+		_capacity = 1 + _n * CAP_INDEX;
+		temp = new _T[_capacity];
+		for (size_t i = 0; i < _n; i++)
+		{
+			temp[i] = Elem[i];
+		}
+		delete[] Elem;
+		Elem = temp;
+		_size = _n;
+	}
+}
+
+template<class _T>
+inline bool CArray<_T>::empty()
+{
+	return !_size;
+}
+
+template<class _T>
 inline void CArray<_T>::clear()
 {
 	if (Elem)
@@ -177,7 +264,7 @@ inline void CArray<_T>::clear()
 		_size = 0;
 		_capacity = 0;
 	}
-		
+
 }
 
 template<class _T>
